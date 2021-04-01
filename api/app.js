@@ -1,25 +1,34 @@
-let express = require("express");
-let app = express();
-let cors = require('cors')
+const express = require("express");
+const app = express();
+const cors = require('cors');
+const {mysqlPoolDb} = require('./connection');
 
 app.use(cors());
 
 app.set('port', process.env.PORT || 8080);
 
-let server = app.listen(app.settings.port, ()=>{
+const server = app.listen(app.settings.port, ()=>{
     console.log('Server ready on', app.settings.port);
 })
 
-const data = {
-    name: "Tomohiro",
-    age: 32,
-    language: ["English", "Japanese"]
-}
+app.get('/api/members', (req, res)=>{
 
-app.get('/api/tomohiro', (req, res)=>{
-    res.send(data);
-})
+    mysqlPoolDb.then(pool=>{
 
-app.get('/', (req, res)=>{
-    res.send({message: "Hello World"});
+        try {
+            pool.query(`
+                select * from member_list
+            `)
+            .then(results=>{
+                res.send(results);
+            })
+            .catch(error=>{
+                throw error;
+            })
+        } catch(error) {
+            res.send({message: "Error"})
+        }
+
+    })
+
 })
