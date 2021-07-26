@@ -13,7 +13,7 @@ RUN yarn install
 # Copy the current directory contents into the container at /client
 COPY . /client/
 
-# Make port 3000 available to the world outside this container
+# Make port 3030 available to the world outside this container
 EXPOSE 3030
 
 # Run the app when the container launches
